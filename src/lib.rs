@@ -1,9 +1,9 @@
-pub struct SpatialMap<T: Copy + Clone> {
+pub struct SpatialMap<T: Clone> {
     data: Box<[Option<([i32; 3], T)>]>,
     dim: [i32; 3],
 }
 
-impl<T: Copy + Clone> SpatialMap<T> {
+impl<T: Clone> SpatialMap<T> {
     pub fn with_capacity(dim: [u32; 3]) -> Self {
         assert!(dim.iter().all(|&d| d.is_power_of_two()));
         let len = dim.iter().product::<u32>() as usize;
@@ -35,7 +35,7 @@ impl<T: Copy + Clone> SpatialMap<T> {
 
     pub fn get(&self, position: [i32; 3]) -> Option<([i32; 3], T)> {
         let index = self.index(position);
-        self.data[index]
+        self.data[index].clone()
     }
 
     pub fn get_exact(&self, position: [i32; 3]) -> Option<&T> {
