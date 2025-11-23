@@ -33,9 +33,9 @@ impl<T: Clone> SpatialMap<T> {
         None
     }
 
-    pub fn get(&self, position: [i32; 3]) -> Option<([i32; 3], T)> {
+    pub fn get(&self, position: [i32; 3]) -> Option<([i32; 3], &T)> {
         let index = self.index(position);
-        self.data[index].as_ref().cloned().map(|(pos, val)| (pos, val))
+        self.data[index].as_ref().map(|(pos, val)| (pos.clone(), val))
     }
 
     pub fn get_exact(&self, position: [i32; 3]) -> Option<&T> {
@@ -63,8 +63,8 @@ impl<T: Clone> SpatialMap<T> {
         None
     }
 
-    pub fn get_index(&self, index: usize) -> Option<([i32; 3], T)> {
-        self.data[index].as_ref().cloned().map(|(pos, val)| (pos, val))
+    pub fn get_index(&self, index: usize) -> Option<([i32; 3], &T)> {
+        self.data[index].as_ref().map(|(pos, val)| (pos.clone(), val))
     }
 
     pub fn get_index_exact(&self, index: usize) -> Option<&T> {
