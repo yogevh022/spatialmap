@@ -63,6 +63,22 @@ impl<T: Clone> SpatialMap<T> {
         None
     }
 
+    pub fn get_index(&self, index: usize) -> Option<([i32; 3], T)> {
+        self.data[index].clone()
+    }
+
+    pub fn get_index_exact(&self, index: usize) -> Option<&T> {
+        self.data[index].as_ref().map(|(_, v)| v)
+    }
+
+    pub fn get_index_mut(&mut self, index: usize) -> Option<&mut ([i32; 3], T)> {
+        self.data[index].as_mut()
+    }
+
+    pub fn get_index_mut_exact(&mut self, index: usize) -> Option<&mut T> {
+        self.data[index].as_mut().map(|(_, v)| v)
+    }
+
     #[inline(always)]
     pub fn index(&self, position: [i32; 3]) -> usize {
         let x = Self::wrap_mod(position[0], self.dim[0]);
