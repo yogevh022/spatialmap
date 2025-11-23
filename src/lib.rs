@@ -48,6 +48,21 @@ impl<T: Clone> SpatialMap<T> {
         None
     }
 
+    pub fn get_mut(&mut self, position: [i32; 3]) -> Option<&mut ([i32; 3], T)> {
+        let index = self.index(position);
+        self.data[index].as_mut()
+    }
+
+    pub fn get_mut_exact(&mut self, position: [i32; 3]) -> Option<&mut T> {
+        let index = self.index(position);
+        if let Some((cell_pos, _)) = self.data[index] {
+            if Self::pos_equal(cell_pos, position) {
+                return self.data[index].as_mut().map(|(_, v)| v);
+            }
+        }
+        None
+    }
+
     #[inline(always)]
     pub fn index(&self, position: [i32; 3]) -> usize {
         let x = Self::wrap_mod(position[0], self.dim[0]);
