@@ -35,7 +35,7 @@ impl<T: Clone> SpatialMap<T> {
 
     pub fn get(&self, position: [i32; 3]) -> Option<([i32; 3], T)> {
         let index = self.index(position);
-        self.data[index].clone()
+        self.data[index].as_ref().cloned().map(|(pos, val)| (pos, val))
     }
 
     pub fn get_exact(&self, position: [i32; 3]) -> Option<&T> {
@@ -48,9 +48,9 @@ impl<T: Clone> SpatialMap<T> {
         None
     }
 
-    pub fn get_mut(&mut self, position: [i32; 3]) -> Option<&mut ([i32; 3], T)> {
+    pub fn get_mut(&mut self, position: [i32; 3]) -> Option<([i32; 3], &mut T)> {
         let index = self.index(position);
-        self.data[index].as_mut()
+        self.data[index].as_mut().map(|(pos, val)| (pos.clone(), val))
     }
 
     pub fn get_mut_exact(&mut self, position: [i32; 3]) -> Option<&mut T> {
@@ -64,15 +64,15 @@ impl<T: Clone> SpatialMap<T> {
     }
 
     pub fn get_index(&self, index: usize) -> Option<([i32; 3], T)> {
-        self.data[index].clone()
+        self.data[index].as_ref().cloned().map(|(pos, val)| (pos, val))
     }
 
     pub fn get_index_exact(&self, index: usize) -> Option<&T> {
         self.data[index].as_ref().map(|(_, v)| v)
     }
 
-    pub fn get_index_mut(&mut self, index: usize) -> Option<&mut ([i32; 3], T)> {
-        self.data[index].as_mut()
+    pub fn get_index_mut(&mut self, index: usize) -> Option<([i32; 3], &mut T)> {
+        self.data[index].as_mut().map(|(pos, val)| (pos.clone(), val))
     }
 
     pub fn get_index_mut_exact(&mut self, index: usize) -> Option<&mut T> {
