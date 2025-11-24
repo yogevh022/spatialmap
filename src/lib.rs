@@ -5,7 +5,6 @@ pub struct SpatialMap<T: Clone> {
 
 impl<T: Clone> SpatialMap<T> {
     pub fn with_capacity(dim: [u32; 3]) -> Self {
-        assert!(dim.iter().all(|&d| d.is_power_of_two()));
         let len = dim.iter().product::<u32>() as usize;
         Self {
             data: vec![None; len].into_boxed_slice(),
