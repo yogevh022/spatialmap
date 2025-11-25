@@ -17,6 +17,10 @@ impl<T: Clone> SpatialMap<T> {
         self.data[index].replace((position, value))
     }
 
+    pub fn insert_index(&mut self, index: usize, position: [i32; 3], value: T) -> Option<([i32; 3], T)> {
+        self.data[index].replace((position, value))
+    }
+
     pub fn remove(&mut self, position: [i32; 3]) -> Option<([i32; 3], T)> {
         let index = self.index(position);
         self.data[index].take()
