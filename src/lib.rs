@@ -5,6 +5,7 @@ pub struct SpatialMap<T: Clone> {
 
 impl<T: Clone> SpatialMap<T> {
     pub fn with_capacity(dim: [u32; 3]) -> Self {
+        assert!(dim.iter().all(|d| d.is_power_of_two()));
         let len = dim.iter().product::<u32>() as usize;
         Self {
             data: vec![None; len].into_boxed_slice(),
@@ -84,15 +85,54 @@ impl<T: Clone> SpatialMap<T> {
 
     #[inline(always)]
     pub fn index(&self, position: [i32; 3]) -> usize {
-        let x = Self::wrap_mod(position[0], self.dim[0]);
-        let y = Self::wrap_mod(position[1], self.dim[1]);
-        let z = Self::wrap_mod(position[2], self.dim[2]);
-        ((x * self.dim[1] + y) * self.dim[2] + z) as usize
+        let x = Self::mod_pow2(position[0], self.dim[0]);
+        let y = Self::mod_pow2(position[1], self.dim[1]);
+        let z = Self::mod_pow2(position[2], self.dim[2]);
+        unsafe {
+            // SAFETY: we validated the indices above (mod with max dim)
+            self.index_unchecked(x, y, z)
+        }
     }
 
     #[inline(always)]
-    fn wrap_mod(n: i32, m: i32) -> i32 {
-        ((n % m) + m) % m
+    pub fn adj_indices(&self, position: [i32; 3]) -> [usize; 6] {
+        let x = Self::mod_pow2(position[0], self.dim[0]);
+        let y = Self::mod_pow2(position[1], self.dim[1]);
+        let z = Self::mod_pow2(position[2], self.dim[2]);
+
+        let xp = Self::mod_pow2(position[0] + 1, self.dim[0]);
+        let xm = Self::mod_pow2(position[0] - 1, self.dim[0]);
+        let yp = Self::mod_pow2(position[1] + 1, self.dim[1]);
+        let ym = Self::mod_pow2(position[1] - 1, self.dim[1]);
+        let zp = Self::mod_pow2(position[2] + 1, self.dim[2]);
+        let zm = Self::mod_pow2(position[2] - 1, self.dim[2]);
+
+        unsafe {
+            // SAFETY: we validated the indices above (mod with max dim)
+            [
+                self.index_unchecked(xp, y, z),
+                self.index_unchecked(xm, y, z),
+                self.index_unchecked(x, yp, z),
+                self.index_unchecked(x, ym, z),
+                self.index_unchecked(x, y, zp),
+                self.index_unchecked(x, y, zm),
+            ]
+        }
+    }
+
+    #[inline(always)]
+    pub unsafe fn index_unchecked(&self, x: i32, y: i32, z: i32) -> usize {
+        ((x * self.dim[1] + y) * self.dim[2] + z) as usize
+    }
+
+    // #[inline(always)]
+    // fn wrap_mod(n: i32, m: i32) -> i32 {
+    //     ((n % m) + m) % m
+    // }
+
+    #[inline(always)]
+    fn mod_pow2(n: i32, p: i32) -> i32 {
+        n & (p - 1)
     }
 
     #[inline(always)]
