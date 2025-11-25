@@ -71,16 +71,26 @@ impl<T: Clone> SpatialMap<T> {
         self.data[index].as_ref().map(|(pos, val)| (pos.clone(), val))
     }
 
-    pub fn get_index_exact(&self, index: usize) -> Option<&T> {
-        self.data[index].as_ref().map(|(_, v)| v)
+    pub fn get_index_exact(&self, index: usize, position: [i32; 3]) -> Option<&T> {
+        if let Some((cell_pos, ref value)) = self.data[index] {
+            if Self::pos_equal(cell_pos, position) {
+                return Some(value);
+            }
+        }
+        None
     }
 
     pub fn get_index_mut(&mut self, index: usize) -> Option<([i32; 3], &mut T)> {
         self.data[index].as_mut().map(|(pos, val)| (pos.clone(), val))
     }
 
-    pub fn get_index_mut_exact(&mut self, index: usize) -> Option<&mut T> {
-        self.data[index].as_mut().map(|(_, v)| v)
+    pub fn get_index_mut_exact(&mut self, index: usize, position: [i32; 3]) -> Option<&mut T> {
+        if let Some((cell_pos, _)) = self.data[index] {
+            if Self::pos_equal(cell_pos, position) {
+                return self.data[index].as_mut().map(|(_, v)| v);
+            }
+        }
+        None
     }
 
     #[inline(always)]
