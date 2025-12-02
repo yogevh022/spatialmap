@@ -63,18 +63,19 @@ impl<T: Default + Clone> SpatialMap<T> {
 
     #[inline]
     pub fn index(&self, position: [i32; 3]) -> usize {
-        let x = rem_e_p2(position[0], self.dim[0]);
-        let y = rem_e_p2(position[1], self.dim[1]);
-        let z = rem_e_p2(position[2], self.dim[2]);
+        let (dim_x, dim_y, dim_z) = (self.dim[0], self.dim[1], self.dim[2]);
+        let x = rem_e_p2(position[0], dim_x);
+        let y = rem_e_p2(position[1], dim_y);
+        let z = rem_e_p2(position[2], dim_z);
         unsafe {
             // SAFETY: we validated the indices above (mod with max dim)
-            self.index_unchecked(x, y, z)
+            self.index_unchecked(x, y, z, dim_y, dim_z)
         }
     }
 
-    #[inline]
-    pub unsafe fn index_unchecked(&self, x: i32, y: i32, z: i32) -> usize {
-        ((x * self.dim[1] + y) * self.dim[2] + z) as usize
+    #[inline(always)]
+    pub unsafe fn index_unchecked(&self, x: i32, y: i32, z: i32, dim_y: i32, dim_z: i32) -> usize {
+        ((x * dim_y + y) * dim_z + z) as usize
     }
 
     pub fn insert(&mut self, position: [i32; 3], value: T) -> Option<SpatialCell<T>> {
