@@ -4,7 +4,7 @@ use std::mem;
 #[derive(Clone, Debug)]
 pub struct SpatialCell<T: Default + Clone> {
     position: [i32; 3],
-    value: T,
+    pub value: T,
 }
 
 impl<T: Default + Clone> SpatialCell<T> {
@@ -38,6 +38,11 @@ impl<T: Default + Clone> SpatialCell<T> {
         } else {
             None
         }
+    }
+
+    #[inline(always)]
+    pub fn position(&self) -> &[i32; 3] {
+        &self.position
     }
 }
 
