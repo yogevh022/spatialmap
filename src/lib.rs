@@ -114,6 +114,10 @@ impl<T: Default + Clone> SpatialMap<T> {
         cell.is_some().then_some(cell)
     }
 
+    pub unsafe fn get_index_mut_unchecked(&mut self, index: usize) -> &mut SpatialCell<T> {
+        &mut self.data[index]
+    }
+
     pub fn get_exact(&self, position: [i32; 3]) -> Option<&SpatialCell<T>> {
         let index = self.index(position);
         let cell = &self.data[index];
