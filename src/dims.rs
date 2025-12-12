@@ -1,5 +1,5 @@
 #[cfg(feature = "glam")]
-use glam::{UVec3, IVec3};
+use glam::{IVec3, UVec3};
 
 use std::ops::Deref;
 
@@ -22,10 +22,20 @@ impl From<[i32; 3]> for I3 {
     }
 }
 
+impl From<(isize, isize, isize)> for I3 {
+    fn from(dim: (isize, isize, isize)) -> Self {
+        Self {
+            inner: [dim.0 as i32, dim.1 as i32, dim.2 as i32],
+        }
+    }
+}
+
 #[cfg(feature = "glam")]
 impl From<glam::IVec3> for I3 {
     fn from(v: glam::IVec3) -> Self {
-        Self { inner: v.to_array() }
+        Self {
+            inner: v.to_array(),
+        }
     }
 }
 
@@ -51,6 +61,8 @@ impl From<[u32; 3]> for U3 {
 #[cfg(feature = "glam")]
 impl From<glam::UVec3> for U3 {
     fn from(v: glam::UVec3) -> Self {
-        Self { inner: v.to_array() }
+        Self {
+            inner: v.to_array(),
+        }
     }
 }
