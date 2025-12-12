@@ -4,13 +4,13 @@ version = 4
 
 [[package]]
 name = "glam"
-version = "0.30.9"
+version = "0.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd47b05dddf0005d850e5644cae7f2b14ac3df487979dbfff3b56f20b1a6ae46"
+checksum = "9e05e7e6723e3455f4818c7b26e855439f7546cf617ef669d1adedb8669e5cb9"
 
 [[package]]
 name = "spatialmap"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "glam",
 ]
