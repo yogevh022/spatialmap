@@ -4,12 +4,12 @@ mod dims;
 use cell::SpatialCell;
 use dims::{I3, U3};
 
-pub struct SpatialMap<T: Default + Clone> {
+pub struct SpatialMap<T: Clone> {
     data: Box<[SpatialCell<T>]>,
     dim: [i32; 3],
 }
 
-impl<T: Default + Clone> SpatialMap<T> {
+impl<T: Clone> SpatialMap<T> {
     pub fn with_capacity(dim: impl Into<U3>) -> Self {
         let dim = dim.into();
         let len = dim.iter().product::<u32>() as usize;

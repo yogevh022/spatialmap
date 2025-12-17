@@ -1,14 +1,15 @@
 use crate::dims::I3;
 use std::mem;
+use std::mem::MaybeUninit;
 
 #[repr(C)]
 #[derive(Clone, Debug)]
-pub struct SpatialCell<T: Default + Clone> {
+pub struct SpatialCell<T: Clone> {
     position: I3,
     pub value: T,
 }
 
-impl<T: Default + Clone> SpatialCell<T> {
+impl<T: Clone> SpatialCell<T> {
     #[inline]
     pub(crate) fn new(position: I3, value: T) -> Self {
         Self { position, value }
@@ -18,7 +19,7 @@ impl<T: Default + Clone> SpatialCell<T> {
     pub(crate) fn new_empty() -> Self {
         Self {
             position: [i32::MIN; 3].into(),
-            value: Default::default(),
+            value: unsafe { MaybeUninit::uninit().assume_init() },
         }
     }
 
