@@ -19,7 +19,7 @@ impl<T: Clone> SpatialCell<T> {
     pub(crate) fn new_empty() -> Self {
         Self {
             position: [i32::MIN; 3].into(),
-            value: unsafe { MaybeUninit::uninit().assume_init() },
+            value: unsafe { MaybeUninit::uninit().assume_init() }, // SAFETY: we use position.x as Some(T) discriminant
         }
     }
 
