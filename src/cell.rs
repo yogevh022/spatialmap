@@ -28,18 +28,23 @@ impl<T: Clone> SpatialCell<T> {
     }
 
     #[inline]
-    pub(crate) fn pos_eq(&self, pos: impl Into<I3>) -> bool {
-        let pos = pos.into();
-        self.position[0] == pos[0] && self.position[1] == pos[1] && self.position[2] == pos[2]
-    }
-
-    #[inline]
-    pub(crate) fn take(&mut self) -> Option<Self> {
+    pub(crate) fn take_checked(&mut self) -> Option<Self> {
         if self.is_some() {
-            Some(mem::replace(self, Self::new_empty()))
+            Some(self.take())
         } else {
             None
         }
+    }
+
+    #[inline]
+    pub fn take(&mut self) -> SpatialCell<T> {
+        mem::replace(self, Self::new_empty())
+    }
+
+    #[inline]
+    pub fn position_eq(&self, pos: impl Into<I3>) -> bool {
+        let pos = pos.into();
+        self.position[0] == pos[0] && self.position[1] == pos[1] && self.position[2] == pos[2]
     }
 
     #[inline(always)]

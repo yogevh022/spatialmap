@@ -75,31 +75,31 @@ impl<T: Clone> SpatialMap<T> {
         let position = position.into();
         let index = self.index(position);
         let cell = &self.data[index];
-        cell.pos_eq(position).then_some(cell)
+        cell.position_eq(position).then_some(cell)
     }
 
     pub fn get_exact_mut(&mut self, position: impl Into<I3>) -> Option<&mut SpatialCell<T>> {
         let position = position.into();
         let index = self.index(position);
         let cell = &mut self.data[index];
-        cell.pos_eq(position).then_some(cell)
+        cell.position_eq(position).then_some(cell)
     }
 
     pub fn remove(&mut self, position: impl Into<I3>) -> Option<SpatialCell<T>> {
         let index = self.index(position.into());
-        self.data[index].take()
+        self.data[index].take_checked()
     }
 
     pub fn remove_index(&mut self, index: usize) -> Option<SpatialCell<T>> {
-        self.data[index].take()
+        self.data[index].take_checked()
     }
 
     pub fn remove_exact(&mut self, position: impl Into<I3>) -> Option<SpatialCell<T>> {
         let position = position.into();
         let index = self.index(position);
         let cell = &mut self.data[index];
-        if cell.pos_eq(position) {
-            cell.take()
+        if cell.position_eq(position) {
+            cell.take_checked()
         } else {
             None
         }
