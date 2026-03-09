@@ -104,6 +104,10 @@ impl<T: Clone> SpatialMap<T> {
             None
         }
     }
+
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.data.iter().filter_map(|cell| cell.get_checked())
+    }
 }
 
 #[inline(always)]
@@ -124,7 +128,10 @@ mod tests {
 
     fn print_bench_time(label: &'static str, dim: [u32; 3], count: usize, time: Duration) {
         let total = count * (dim[0] * dim[1] * dim[2]) as usize;
-        println!("{:<16} {:?} - {} ({}*[{}*{}*{}])", label, time, total, count, dim[0], dim[1], dim[2]);
+        println!(
+            "{:<16} {:?} - {} ({}*[{}*{}*{}])",
+            label, time, total, count, dim[0], dim[1], dim[2]
+        );
     }
 
     #[test]

@@ -28,6 +28,20 @@ impl<T: Clone> SpatialCell<T> {
     }
 
     #[inline]
+    pub(crate) fn get_checked(&self) -> Option<&T> {
+        if self.is_some() {
+            Some(self.get())
+        } else {
+            None
+        }
+    }
+
+    #[inline]
+    pub(crate) fn get(&self) -> &T {
+        &self.value
+    }
+
+    #[inline]
     pub(crate) fn take_checked(&mut self) -> Option<Self> {
         if self.is_some() {
             Some(self.take())
